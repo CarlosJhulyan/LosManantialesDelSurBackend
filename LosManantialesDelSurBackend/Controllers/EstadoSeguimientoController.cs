@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace LosManantialesDelSurBackend.Controllers {
-    [Route("api/[controller]")]
+    [Route("api/estado-seguimiento")]
     [ApiController]
 
     public class EstadoSeguimientoController : ControllerBase {
@@ -18,9 +18,9 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<EstadoSeguimiento>>> Get() {
-            var estado = await context.EstadoSeguimiento.ToListAsync();
+        [HttpGet("{uuid}")]
+        public async Task<ActionResult<List<EstadoSeguimiento>>> Get(string uuid) {
+            var estado = await context.EstadoSeguimiento.Where(x => x.Seguimiento == uuid).ToListAsync();
             return estado;
         }
 

@@ -15,7 +15,7 @@ namespace LosManantialesDelSurBackend.Models
 
         public string Uuid { get; set; }
         public string NumeroSeguimiento { get; set; }
-        public DateTime? FechEnvio { get; set; }
+        public DateTime? FechaEnvio { get; set; }
         public DateTime? FechaEntrega { get; set; }
         public DateTime? CreatedAt { get; set; }
 

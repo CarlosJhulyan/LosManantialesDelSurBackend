@@ -245,7 +245,7 @@ namespace LosManantialesDelSurBackend.Models
             modelBuilder.Entity<Pasaje>(entity =>
             {
                 entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Pasaje__7F427930B31CFAAE");
+                    .HasName("PK__Pasaje__7F427930B7F59E6E");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(60)
@@ -346,13 +346,13 @@ namespace LosManantialesDelSurBackend.Models
                     .HasColumnType("datetime")
                     .HasColumnName("created_at");
 
-                entity.Property(e => e.FechEnvio)
-                    .HasColumnType("datetime")
-                    .HasColumnName("fech_envio");
-
                 entity.Property(e => e.FechaEntrega)
                     .HasColumnType("datetime")
                     .HasColumnName("fecha_entrega");
+
+                entity.Property(e => e.FechaEnvio)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha_envio");
 
                 entity.Property(e => e.NumeroSeguimiento)
                     .HasMaxLength(60)

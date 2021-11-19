@@ -23,7 +23,7 @@ namespace LosManantialesDelSurBackend.Models
         public virtual Destinatario DestinatarioNavigation { get; set; }
         public virtual Sucursal DestinoPaqueteNavigation { get; set; }
         public virtual Sucursal OrigenPaqueteNavigation { get; set; }
-        public virtual Usuario RemitenteNavigation { get; set; }
+        public virtual Cliente RemitenteNavigation { get; set; }
         public virtual Seguimiento SeguimientoNavigation { get; set; }
         public virtual Vehiculo VehiculoNavigation { get; set; }
     }

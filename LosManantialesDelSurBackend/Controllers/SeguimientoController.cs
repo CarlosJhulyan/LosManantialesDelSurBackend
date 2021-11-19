@@ -26,7 +26,10 @@ namespace LosManantialesDelSurBackend.Controllers {
 
         [HttpPost]
         public async Task<ActionResult<string>> Post(Seguimiento seguimiento) {
+            Guid uuid = Guid.NewGuid();
+            seguimiento.Uuid = uuid.ToString();
             seguimiento.CreatedAt = DateTime.UtcNow;
+            seguimiento.NumeroSeguimiento = generarCodigo();
             context.Seguimiento.Add(seguimiento);
             await context.SaveChangesAsync();
             return seguimiento.Uuid;
@@ -45,6 +48,14 @@ namespace LosManantialesDelSurBackend.Controllers {
             context.Seguimiento.Remove(seguimiento);
             await context.SaveChangesAsync();
             return Ok();
+        }
+
+        private string generarCodigo() {
+            Guid uuid = Guid.NewGuid();
+            var uuidString = uuid.ToString();
+            var codigoArray = uuidString.Split('-');
+            string codigo = string.Join("", codigoArray.Skip(1));
+            return codigo.Substring(0, 15);
         }
     }
 }

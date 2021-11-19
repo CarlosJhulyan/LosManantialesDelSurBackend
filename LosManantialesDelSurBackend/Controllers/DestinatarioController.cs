@@ -26,6 +26,8 @@ namespace LosManantialesDelSurBackend.Controllers {
 
         [HttpPost]
         public async Task<ActionResult<string>> Post(Destinatario destinatario) {
+            Guid uuid = Guid.NewGuid();
+            destinatario.Uuid = uuid.ToString();
             destinatario.CreatedAt = DateTime.UtcNow;
             context.Destinatario.Add(destinatario);
             await context.SaveChangesAsync();
