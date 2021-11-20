@@ -18,27 +18,27 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet]                                       // Lista los sucursales
         public async Task<ActionResult<List<Sucursal>>> Get() {
             var sucursal = await context.Sucursal.ToListAsync();
             return sucursal;
         }
 
-        [HttpPost]
+        [HttpPost]                                      // Añadir Sucursales
         public async Task<ActionResult<int>> Post(Sucursal sucursal) {
             context.Sucursal.Add(sucursal);
             await context.SaveChangesAsync();
             return sucursal.Id;
         }
 
-        [HttpPut]
+        [HttpPut]                                       // Actualiza la sucursal
         public async Task<ActionResult<int>> Update(Sucursal sucursal) {
             context.Sucursal.Update(sucursal);
             await context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete]                                    // Elimina la sucursal
         public async Task<ActionResult<int>> Delete(int id) {
             var sucursal = await context.Sucursal.FindAsync(id);
             context.Sucursal.Remove(sucursal);

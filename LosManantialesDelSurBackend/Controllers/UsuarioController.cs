@@ -18,13 +18,21 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet]                                           // Lista los usuarios
         public async Task<ActionResult<List<Usuario>>> Get() {
             var usuario = await context.Usuario.ToListAsync();
             return usuario;
         }
 
-        [HttpPost]
+        [HttpGet("{uuid}")]                          // Devuelve un usuario por su uuid
+        public async Task<ActionResult<Usuario>> Get(string uuid) {
+            var usuario = await context.Usuario.FirstOrDefaultAsync(x => x.Uuid == uuid);
+	        if(usuario == null)
+		        return NotFound();
+	        return usuario;
+        }
+
+        [HttpPost]                                          // Registra un nuevo usuario
         public async Task<ActionResult<string>> Post(Usuario usuario) {
             Guid uuid = Guid.NewGuid();
             usuario.Uuid = uuid.ToString();
@@ -34,14 +42,14 @@ namespace LosManantialesDelSurBackend.Controllers {
             return usuario.Uuid;
         }
 
-        [HttpPut]
+        [HttpPut]                                           // Actualiza los datos de un usuario
         public async Task<ActionResult<int>> Update(Usuario usuario) {
             context.Usuario.Update(usuario);
             await context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete]                                        // Elimina un usuario
         public async Task<ActionResult<int>> Delete(int id) {
             var usuario= await context.Usuario.FindAsync(id);
             context.Usuario.Remove(usuario);
