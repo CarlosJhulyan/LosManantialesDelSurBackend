@@ -24,7 +24,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             return cliente;
         }
 
-        [HttpGet("{uuid}")]                        // Obtener un cliente por su uuid
+        [HttpGet("{uuid}")]                             // Obtener un cliente por su uuid
         public async Task<ActionResult<Cliente>> Get(string uuid) {
             var cliente = await context.Cliente.FirstOrDefaultAsync(x => x.Uuid == uuid);
             if (cliente == null)
@@ -33,13 +33,13 @@ namespace LosManantialesDelSurBackend.Controllers {
         }
 
         [HttpPost]                                      //crear nuevo cliente
-        public async Task<ActionResult<string>> Post(Cliente cliente) {
+        public async Task<ActionResult<object>> Post(Cliente cliente) {
             Guid uuid = Guid.NewGuid();
             cliente.Uuid = uuid.ToString();
             cliente.CreatedAt = DateTime.UtcNow;
             context.Cliente.Add(cliente);
             await context.SaveChangesAsync();
-            return cliente.Uuid;
+            return new { uuid = cliente.Uuid };
         }
                     
         [HttpPut]                                        // Modificar cliente
@@ -49,7 +49,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             return Ok();
         }
 
-        [HttpDelete]                             // Eliminar cliente
+        [HttpDelete]                                    // Eliminar cliente
         public async Task<ActionResult<int>> Delete(int id) {
             var cliente = await context.Cliente.FindAsync(id);
             context.Cliente.Remove(cliente);

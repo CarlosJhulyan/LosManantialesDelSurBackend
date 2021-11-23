@@ -18,7 +18,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet("{id}")]                                           // Lista los vehiculos por sucursal
+        [HttpGet("{id}")]                                       // Lista los vehiculos por sucursal
         public async Task<ActionResult<List<Vehiculo>>> Get(int id) {
             var vehiculo = await context.Vehiculo.Where(x => x.SucursalActual == id).ToListAsync();
             return vehiculo;
@@ -34,7 +34,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             return asientos;
         }
 
-        [HttpPost]                                                  //Registra un vehiculo
+        [HttpPost]                                              //Registra un vehiculo
         public async Task<ActionResult<int>> Post(Vehiculo vehiculo) {
             vehiculo.CreatedAt = DateTime.UtcNow;
             context.Vehiculo.Add(vehiculo);
@@ -42,7 +42,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             return vehiculo.Id;
         }
 
-        [HttpPut]                                                   //Actualiza los datos del Vehiculo
+        [HttpPut]                                               //Actualiza los datos del Vehiculo
         public async Task<ActionResult<int>> Update(Vehiculo vehiculo) {
             context.Vehiculo.Update(vehiculo);
             await context.SaveChangesAsync();

@@ -24,7 +24,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             return usuario;
         }
 
-        [HttpGet("{uuid}")]                          // Devuelve un usuario por su uuid
+        [HttpGet("{uuid}")]                                 // Devuelve un usuario por su uuid
         public async Task<ActionResult<Usuario>> Get(string uuid) {
             var usuario = await context.Usuario.FirstOrDefaultAsync(x => x.Uuid == uuid);
 	        if(usuario == null)

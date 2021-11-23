@@ -18,27 +18,27 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet]                                       // Listar los precios de asiento
         public async Task<ActionResult<List<PrecioAsiento>>> Get() {
             var precio = await context.PrecioAsiento.ToListAsync();
             return precio;
         }
 
-        [HttpPost]
+        [HttpPost]                                      // Generar los precios del asiento
         public async Task<ActionResult<int>> Post(PrecioAsiento precio) {
             context.PrecioAsiento.Add(precio);
             await context.SaveChangesAsync();
             return precio.Id;
         }
 
-        [HttpPut]
+        [HttpPut]                                       // Actualizar los precios del asiento
         public async Task<ActionResult<int>> Update(PrecioAsiento precio) {
             context.PrecioAsiento.Update(precio);
             await context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete]                                    // Eliminar los precios del asiento
         public async Task<ActionResult<int>> Delete(int id) {
             var precio = await context.PrecioAsiento.FindAsync(id);
             context.PrecioAsiento.Remove(precio);

@@ -18,13 +18,13 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Seguimiento>>> Get() {
+        [HttpGet("{uuid}")]                         // Traer todos los seguimientos
+        public async Task<ActionResult<List<Seguimiento>>> Get(string uuid) {
             var seguimiento = await context.Seguimiento.ToListAsync();
             return seguimiento;
         }
 
-        [HttpPost]
+        [HttpPost]                                  // Generar seguimiento
         public async Task<ActionResult<string>> Post(Seguimiento seguimiento) {
             Guid uuid = Guid.NewGuid();
             seguimiento.Uuid = uuid.ToString();
@@ -35,14 +35,14 @@ namespace LosManantialesDelSurBackend.Controllers {
             return seguimiento.Uuid;
         }
 
-        [HttpPut]
+        [HttpPut]                                   // Actualizar el seguimiento
         public async Task<ActionResult<int>> Update(Seguimiento seguimiento) {
             context.Seguimiento.Update(seguimiento);
             await context.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete]                                // Eliminar el seguimiento
         public async Task<ActionResult<int>> Delete(int id) {
             var seguimiento = await context.Seguimiento.FindAsync(id);
             context.Seguimiento.Remove(seguimiento);
@@ -55,7 +55,22 @@ namespace LosManantialesDelSurBackend.Controllers {
             var uuidString = uuid.ToString();
             var codigoArray = uuidString.Split('-');
             string codigo = string.Join("", codigoArray.Skip(1));
-            return codigo.Substring(0, 15);
+            return codigo.Substring(0, 15).ToUpper();
+        }
+
+        /*================ ESTADOS SEGUIMIENTO ==================*/
+
+        [HttpGet("estados/{uuid}")]                 // Traer todos los estados por seguimiento
+        public async Task<ActionResult<List<EstadoSeguimiento>>> GetStatus(string uuid) {
+            var estado = await context.EstadoSeguimiento.Where(x => x.Seguimiento == uuid).ToListAsync();
+            return estado;
+        }
+
+        [HttpPost("estados")]                                  // Generar el estado del seguimiento
+        public async Task<ActionResult<int>> PostStatus(EstadoSeguimiento estado) {
+            context.EstadoSeguimiento.Add(estado);
+            await context.SaveChangesAsync();
+            return estado.Id;
         }
     }
 }
