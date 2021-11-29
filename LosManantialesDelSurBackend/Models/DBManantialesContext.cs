@@ -317,19 +317,23 @@ namespace LosManantialesDelSurBackend.Models
             {
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.DestinoSucursal)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("destino_sucursal");
+                entity.Property(e => e.DestinoSucursal).HasColumnName("destino_sucursal");
 
-                entity.Property(e => e.OrigenSucursal)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasColumnName("origen_sucursal");
+                entity.Property(e => e.OrigenSucursal).HasColumnName("origen_sucursal");
 
                 entity.Property(e => e.PrecioPaquete).HasColumnName("precio_paquete");
 
                 entity.Property(e => e.PrecioPasaje).HasColumnName("precio_pasaje");
+
+                entity.HasOne(d => d.DestinoSucursalNavigation)
+                    .WithMany(p => p.PrecioDistanciaDestinoSucursalNavigation)
+                    .HasForeignKey(d => d.DestinoSucursal)
+                    .HasConstraintName("fk_DestinoSucursalPrecio");
+
+                entity.HasOne(d => d.OrigenSucursalNavigation)
+                    .WithMany(p => p.PrecioDistanciaOrigenSucursalNavigation)
+                    .HasForeignKey(d => d.OrigenSucursal)
+                    .HasConstraintName("fk_OrigenSucursalPrecio");
             });
 
             modelBuilder.Entity<Seguimiento>(entity =>
@@ -468,15 +472,23 @@ namespace LosManantialesDelSurBackend.Models
 
                 entity.Property(e => e.SucursalActual).HasColumnName("sucursal_actual");
 
+                entity.Property(e => e.SucursalFinal).HasColumnName("sucursal_final");
+
                 entity.HasOne(d => d.ConductorNavigation)
                     .WithMany(p => p.Vehiculo)
                     .HasForeignKey(d => d.Conductor)
                     .HasConstraintName("fk_Conductor");
 
                 entity.HasOne(d => d.SucursalActualNavigation)
-                    .WithMany(p => p.Vehiculo)
+                    .WithMany(p => p.VehiculoSucursalActualNavigation)
                     .HasForeignKey(d => d.SucursalActual)
                     .HasConstraintName("fk_SucursalActual");
+
+                entity.HasOne(d => d.SucursalFinalNavigation)
+                    .WithMany(p => p.VehiculoSucursalFinalNavigation)
+                    .HasForeignKey(d => d.SucursalFinal)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("fk_SucursalFinal");
             });
 
             OnModelCreatingPartial(modelBuilder);

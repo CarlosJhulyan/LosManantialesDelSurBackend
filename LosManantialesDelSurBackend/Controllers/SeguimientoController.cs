@@ -18,9 +18,9 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet("{uuid}")]                         // Traer todos los seguimientos
-        public async Task<ActionResult<List<Seguimiento>>> Get(string uuid) {
-            var seguimiento = await context.Seguimiento.ToListAsync();
+        [HttpGet("{uuid}")]                         // Traer un seguimiento
+        public async Task<ActionResult<Seguimiento>> Get(string uuid) {
+            var seguimiento = await context.Seguimiento.FirstOrDefaultAsync(x => x.Uuid == uuid);
             return seguimiento;
         }
 
@@ -62,7 +62,7 @@ namespace LosManantialesDelSurBackend.Controllers {
 
         [HttpGet("estados/{uuid}")]                 // Traer todos los estados por seguimiento
         public async Task<ActionResult<List<EstadoSeguimiento>>> GetStatus(string uuid) {
-            var estado = await context.EstadoSeguimiento.Where(x => x.Seguimiento == uuid).ToListAsync();
+            var estado = await context.EstadoSeguimiento.Where(x => x.Seguimiento == uuid).OrderByDescending(x => x.Fecha).ToListAsync();
             return estado;
         }
 

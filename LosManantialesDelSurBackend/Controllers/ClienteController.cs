@@ -50,11 +50,11 @@ namespace LosManantialesDelSurBackend.Controllers {
         }
 
         [HttpDelete]                                    // Eliminar cliente
-        public async Task<ActionResult<int>> Delete(int id) {
-            var cliente = await context.Cliente.FindAsync(id);
+        public async Task<ActionResult<int>> Delete(string uuid) {
+            var cliente = await context.Cliente.FindAsync(uuid);
             context.Cliente.Remove(cliente);
             await context.SaveChangesAsync();
-            return Ok();
+            return Ok(new { statusCode = 200, message = "Usuario eliminado correctamente" });
         }
     }
 }

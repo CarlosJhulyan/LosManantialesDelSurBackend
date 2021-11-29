@@ -19,7 +19,13 @@ namespace LosManantialesDelSurBackend.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<List<Paquete>>> Get() {
-            var paquete = await context.Paquete.ToListAsync();
+            var paquete = await context.Paquete.OrderByDescending(x => x.CreatedAt).ToListAsync();
+            return paquete;
+        }
+
+        [HttpGet("{uuid}")]
+        public async Task<ActionResult<List<Paquete>>> Get(string uuid) {
+            var paquete = await context.Paquete.Where(x => x.Remitente == uuid).OrderByDescending(x => x.CreatedAt).ToListAsync();
             return paquete;
         }
 

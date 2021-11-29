@@ -19,9 +19,11 @@ namespace LosManantialesDelSurBackend.Models
         public bool? Estado { get; set; }
         public int? SucursalActual { get; set; }
         public DateTime? CreatedAt { get; set; }
+        public int? SucursalFinal { get; set; }
 
         public virtual Usuario ConductorNavigation { get; set; }
         public virtual Sucursal SucursalActualNavigation { get; set; }
+        public virtual Sucursal SucursalFinalNavigation { get; set; }
         public virtual ICollection<Paquete> Paquete { get; set; }
         public virtual ICollection<Pasaje> Pasaje { get; set; }
     }

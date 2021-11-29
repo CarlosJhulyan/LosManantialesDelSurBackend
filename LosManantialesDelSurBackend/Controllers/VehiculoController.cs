@@ -18,20 +18,20 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet("{id}")]                                       // Lista los vehiculos por sucursal
-        public async Task<ActionResult<List<Vehiculo>>> Get(int id) {
-            var vehiculo = await context.Vehiculo.Where(x => x.SucursalActual == id).ToListAsync();
+        [HttpGet()]                                             // Lista los vehiculos por destino y origen
+        public async Task<ActionResult<List<Vehiculo>>> Get(int origen, int destino) {
+            var vehiculo = await context.Vehiculo.Where(x => x.SucursalActual == origen && x.SucursalFinal == destino && x.Estado == true).ToListAsync();
             return vehiculo;
         }
 
         [HttpGet("asientos/{id}")]
-        public async Task<ActionResult<int[]>> GetAsientosDisponibles(int id) {
+        public async Task<ActionResult<object>> GetAsientosDisponibles(int id) {
             // TODO: Verificar si el vehiculo existe o no
             var pasajes = await context.Pasaje.Where(x => x.VehiculoPasaje == id).ToListAsync();
-            int[] asientos = new int[18];
+            int[] asientos = new int[14];
             foreach (var pasaje in pasajes)
                 asientos[(int) pasaje.NumeroAsiento - 1] = 1;
-            return asientos;
+            return new { asientos };
         }
 
         [HttpPost]                                              //Registra un vehiculo
