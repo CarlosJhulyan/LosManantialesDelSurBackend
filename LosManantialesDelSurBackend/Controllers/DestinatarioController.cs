@@ -1,4 +1,6 @@
 ﻿using LosManantialesDelSurBackend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,35 +20,29 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet]                                                           // Trae todos los destinatarios en una lista
         public async Task<ActionResult<List<Destinatario>>> Get() {
             var destinatario = await context.Destinatario.ToListAsync();
             return destinatario;
         }
 
-        [HttpPost]
+        [HttpPost]                                                          // Crear un destinatario
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<string>> Post(Destinatario destinatario) {
             Guid uuid = Guid.NewGuid();
             destinatario.Uuid = uuid.ToString();
             destinatario.CreatedAt = DateTime.UtcNow;
             context.Destinatario.Add(destinatario);
             await context.SaveChangesAsync();
-            return destinatario.Uuid;
+            return Ok(new { message = "Destinatario generado", data = destinatario, statusCode = 201 });
         }
 
-        [HttpPut]
-        public async Task<ActionResult<int>> Update(Destinatario destinatario) {
-            context.Destinatario.Update(destinatario);
-            await context.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpDelete]
+        [HttpDelete]                                                        // Elimina un destinatario
         public async Task<ActionResult<int>> Delete(int id) {
             var destinatario = await context.Destinatario.FindAsync(id);
             context.Destinatario.Remove(destinatario);
             await context.SaveChangesAsync();
-            return Ok();
+            return Ok(new { message = "Destinatario eliminado correctamente.", statusCode = 200 });
         }
     }
 }

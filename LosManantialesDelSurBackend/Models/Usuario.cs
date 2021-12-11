@@ -9,6 +9,8 @@ namespace LosManantialesDelSurBackend.Models
     {
         public Usuario()
         {
+            Paquete = new HashSet<Paquete>();
+            Pasaje = new HashSet<Pasaje>();
             Vehiculo = new HashSet<Vehiculo>();
         }
 
@@ -22,6 +24,8 @@ namespace LosManantialesDelSurBackend.Models
         public string Celular { get; set; }
         public DateTime? CreatedAt { get; set; }
 
+        public virtual ICollection<Paquete> Paquete { get; set; }
+        public virtual ICollection<Pasaje> Pasaje { get; set; }
         public virtual ICollection<Vehiculo> Vehiculo { get; set; }
     }
 }

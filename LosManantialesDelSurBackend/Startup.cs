@@ -32,7 +32,6 @@ namespace LosManantialesDelSurBackend {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LosManantialesDelSurBackend", Version = "v1" });
             });
             services.AddDbContext<DBManantialesContext>(db => db.UseSqlServer(Configuration.GetConnectionString("connectionDB")));
-
             services.AddCors();
 
             // Configuración del servicio de autenticación JWT
@@ -42,8 +41,7 @@ namespace LosManantialesDelSurBackend {
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:secretKey"])),
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:secretKey"]))
                 };
             });
         }
@@ -63,6 +61,7 @@ namespace LosManantialesDelSurBackend {
 
             app.UseRouting();
             app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });

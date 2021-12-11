@@ -27,36 +27,37 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.configuracion = config;
         }
 
-        [HttpPost("cliente")]
+        [HttpPost()]
         [AllowAnonymous]
-        public async Task<ActionResult<object>> SignCliente(CredencialCliente cliente) {
-            var clienteData = await autenticarCliente(cliente);
-            if (clienteData is Cliente)
-                return Ok(new { token = generarJWTCliente((Cliente) clienteData), data = clienteData });
-            return clienteData;
+        public async Task<ActionResult<object>> SignIn(CredencialUser user) {
+            var userData = await autenticarUser(user);
+            if (userData is Usuario)
+                return Ok(new { token = generarJWT((Usuario) userData), data = userData });
+            return userData;
         }
 
-        private async Task<object> autenticarCliente(CredencialCliente cliente) {
-            var response = await context.Cliente.FirstOrDefaultAsync(x => x.Correo == cliente.Correo);
+        private async Task<object> autenticarUser(CredencialUser user) {
+            var response = await context.Usuario.FirstOrDefaultAsync(x => x.Correo == user.Correo);
             if (response == null)
                 return NotFound(new { message = "Este correo no esta registrado." });
-            else if (response.Dni != cliente.Dni)
-                return Unauthorized(new { message = "DNI incorrecto." });
+            else if (response.Pass != user.Password)
+                return BadRequest(new { message = "Contraseña incorrecta." });
             else
                 return response;
         }
 
-        // GENERAR WEB TOKEN DEL CLIENTE 
-        private RespuestaAutenticacion generarJWTCliente(Cliente cliente) {
+        // GENERAR WEB TOKEN DEL USUARIO
+        private RespuestaAutenticacion generarJWT(Usuario user) {
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuracion["JWT:secretKey"]));
             var signInCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             var header = new JwtHeader(signInCredentials);
 
             var _Claims = new[] {
-                new Claim("uuid", cliente.Uuid),
-                new Claim("nombres", cliente.Nombres),
-                new Claim("correo", cliente.Correo),
-                new Claim("dni", cliente.Dni)
+                new Claim(ClaimTypes.NameIdentifier, user.Uuid),
+                new Claim(ClaimTypes.Name, user.Nombres),
+                new Claim(ClaimTypes.Email, user.Correo),
+                new Claim(ClaimTypes.SerialNumber, user.Dni),
+                new Claim(ClaimTypes.Role, user.Rol)
             };
 
             var expiracion = DateTime.UtcNow.AddHours(24);
@@ -65,13 +66,14 @@ namespace LosManantialesDelSurBackend.Controllers {
                     issuer: null,
                     audience: null,
                     claims: _Claims,
-                    notBefore: DateTime.UtcNow,                             // El  tiempo q se crea el token
+                    notBefore: DateTime.UtcNow,                             // El  momento que se crea el token
                     expires: expiracion                                     // La expiracion del token
                 );
             var token = new JwtSecurityToken(header, payload);
 
             return new RespuestaAutenticacion() {
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expires = expiracion
             };                                                              // Devuelve la respuesta del token
         }
     }

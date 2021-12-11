@@ -18,12 +18,13 @@ namespace LosManantialesDelSurBackend.Models
         public int? OrigenPaquete { get; set; }
         public int? DestinoPaquete { get; set; }
         public string CodigoValidacion { get; set; }
+        public double? MontoTotal { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public virtual Destinatario DestinatarioNavigation { get; set; }
         public virtual Sucursal DestinoPaqueteNavigation { get; set; }
         public virtual Sucursal OrigenPaqueteNavigation { get; set; }
-        public virtual Cliente RemitenteNavigation { get; set; }
+        public virtual Usuario RemitenteNavigation { get; set; }
         public virtual Seguimiento SeguimientoNavigation { get; set; }
         public virtual Vehiculo VehiculoNavigation { get; set; }
     }

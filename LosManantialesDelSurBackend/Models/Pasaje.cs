@@ -16,11 +16,13 @@ namespace LosManantialesDelSurBackend.Models
         public DateTime? FechaSalida { get; set; }
         public DateTime? FechaLlegada { get; set; }
         public string CodigoValidacion { get; set; }
+        public string NumeroGuia { get; set; }
+        public double? MontoTotal { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         public virtual Sucursal DestinoSucursalNavigation { get; set; }
         public virtual Sucursal OrigenSucursalNavigation { get; set; }
-        public virtual Cliente PasajeroNavigation { get; set; }
+        public virtual Usuario PasajeroNavigation { get; set; }
         public virtual Vehiculo VehiculoPasajeNavigation { get; set; }
     }
 }

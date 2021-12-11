@@ -1,4 +1,6 @@
 ﻿using LosManantialesDelSurBackend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,35 +19,29 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet]                                                   // Lista todos los pasajes
         public async Task<ActionResult<List<Pasaje>>> Get() {
             var pasaje = await context.Pasaje.ToListAsync();
             return pasaje;
         }
 
-        [HttpPost]
+        [HttpPost]                                                  // Registra un pasaje
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<string>> Post(Pasaje pasaje) {
             Guid uuid = Guid.NewGuid();
             pasaje.Uuid = uuid.ToString();
             pasaje.CreatedAt = DateTime.UtcNow;
             context.Pasaje.Add(pasaje);
             await context.SaveChangesAsync();
-            return pasaje.Uuid;
+            return Ok(new { message = "Pasaje registrado correctamente.", statusCode = 201, data = pasaje });
         }
 
-        [HttpPut]
-        public async Task<ActionResult<int>> Update(Pasaje pasaje) {
-            context.Pasaje.Update(pasaje);
-            await context.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpDelete]
+        [HttpDelete]                                                    // Elimina un pasaje registrado
         public async Task<ActionResult<int>> Delete(int id) {
             var pasaje = await context.Pasaje.FindAsync(id);
             context.Pasaje.Remove(pasaje);
             await context.SaveChangesAsync();
-            return Ok();
+            return Ok(new { message = "Registro de pasaje eliminado correctamente.", statusCode = 200 });
         }
     }
 }

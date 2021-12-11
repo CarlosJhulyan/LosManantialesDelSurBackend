@@ -17,7 +17,6 @@ namespace LosManantialesDelSurBackend.Models
         {
         }
 
-        public virtual DbSet<Cliente> Cliente { get; set; }
         public virtual DbSet<CodigoValidacionPago> CodigoValidacionPago { get; set; }
         public virtual DbSet<Destinatario> Destinatario { get; set; }
         public virtual DbSet<EstadoSeguimiento> EstadoSeguimiento { get; set; }
@@ -42,52 +41,6 @@ namespace LosManantialesDelSurBackend.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Modern_Spanish_CI_AS");
 
-            modelBuilder.Entity<Cliente>(entity =>
-            {
-                entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Cliente__7F427930BAB10624");
-
-                entity.HasIndex(e => e.Correo, "UQ__Cliente__2A586E0B0EBE0018")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Celular, "UQ__Cliente__2E4973E707DDFC6E")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.Dni, "UQ__Cliente__D87608A728B580FB")
-                    .IsUnique();
-
-                entity.Property(e => e.Uuid)
-                    .HasMaxLength(60)
-                    .IsUnicode(false)
-                    .HasColumnName("uuid");
-
-                entity.Property(e => e.Celular)
-                    .HasMaxLength(9)
-                    .IsUnicode(false)
-                    .HasColumnName("celular")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.Correo)
-                    .HasMaxLength(60)
-                    .IsUnicode(false)
-                    .HasColumnName("correo");
-
-                entity.Property(e => e.CreatedAt)
-                    .HasColumnType("datetime")
-                    .HasColumnName("created_at");
-
-                entity.Property(e => e.Dni)
-                    .HasMaxLength(8)
-                    .IsUnicode(false)
-                    .HasColumnName("dni")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.Nombres)
-                    .HasMaxLength(60)
-                    .IsUnicode(false)
-                    .HasColumnName("nombres");
-            });
-
             modelBuilder.Entity<CodigoValidacionPago>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("id");
@@ -104,10 +57,7 @@ namespace LosManantialesDelSurBackend.Models
             modelBuilder.Entity<Destinatario>(entity =>
             {
                 entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Destinat__7F42793049685E6F");
-
-                entity.HasIndex(e => e.Celular, "UQ__Destinat__2E4973E7F2D94FD9")
-                    .IsUnique();
+                    .HasName("PK__Destinat__7F427930CFB5D1A0");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(60)
@@ -191,6 +141,8 @@ namespace LosManantialesDelSurBackend.Models
                     .IsUnicode(false)
                     .HasColumnName("dimensiones");
 
+                entity.Property(e => e.MontoTotal).HasColumnName("monto_total");
+
                 entity.Property(e => e.NumeroGuia)
                     .HasMaxLength(8)
                     .IsUnicode(false)
@@ -245,7 +197,7 @@ namespace LosManantialesDelSurBackend.Models
             modelBuilder.Entity<Pasaje>(entity =>
             {
                 entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Pasaje__7F427930B7F59E6E");
+                    .HasName("PK__Pasaje__7F4279304C9197FE");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(60)
@@ -272,7 +224,15 @@ namespace LosManantialesDelSurBackend.Models
                     .HasColumnType("date")
                     .HasColumnName("fecha_salida");
 
+                entity.Property(e => e.MontoTotal).HasColumnName("monto_total");
+
                 entity.Property(e => e.NumeroAsiento).HasColumnName("numero_asiento");
+
+                entity.Property(e => e.NumeroGuia)
+                    .HasMaxLength(8)
+                    .IsUnicode(false)
+                    .HasColumnName("numero_guia")
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.OrigenSucursal).HasColumnName("origen_sucursal");
 
@@ -339,7 +299,7 @@ namespace LosManantialesDelSurBackend.Models
             modelBuilder.Entity<Seguimiento>(entity =>
             {
                 entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Seguimie__7F4279306D6EA001");
+                    .HasName("PK__Seguimie__7F427930FF7A07B6");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(60)
@@ -350,13 +310,13 @@ namespace LosManantialesDelSurBackend.Models
                     .HasColumnType("datetime")
                     .HasColumnName("created_at");
 
+                entity.Property(e => e.FechEnvio)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fech_envio");
+
                 entity.Property(e => e.FechaEntrega)
                     .HasColumnType("datetime")
                     .HasColumnName("fecha_entrega");
-
-                entity.Property(e => e.FechaEnvio)
-                    .HasColumnType("datetime")
-                    .HasColumnName("fecha_envio");
 
                 entity.Property(e => e.NumeroSeguimiento)
                     .HasMaxLength(60)
