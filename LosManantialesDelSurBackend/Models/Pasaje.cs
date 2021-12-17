@@ -9,6 +9,7 @@ namespace LosManantialesDelSurBackend.Models
     {
         public string Uuid { get; set; }
         public int? VehiculoPasaje { get; set; }
+        public int? VehiculoPasajeStatic { get; set; }
         public string Pasajero { get; set; }
         public int? NumeroAsiento { get; set; }
         public int? OrigenSucursal { get; set; }
@@ -24,5 +25,6 @@ namespace LosManantialesDelSurBackend.Models
         public virtual Sucursal OrigenSucursalNavigation { get; set; }
         public virtual Usuario PasajeroNavigation { get; set; }
         public virtual Vehiculo VehiculoPasajeNavigation { get; set; }
+        public virtual Vehiculo VehiculoPasajeStaticNavigation { get; set; }
     }
 }

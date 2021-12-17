@@ -51,6 +51,7 @@ namespace LosManantialesDelSurBackend.Controllers {
             Guid uuid = Guid.NewGuid();
             user.Uuid = uuid.ToString();
             user.CreatedAt = DateTime.UtcNow;
+            user.Pass = BCrypt.Net.BCrypt.HashPassword(user.Pass);
             context.Usuario.Add(user);
             await context.SaveChangesAsync();
             return Ok(new { message = "Usuario registrado correctamente.", data = user, statusCode = 201 });
@@ -59,9 +60,18 @@ namespace LosManantialesDelSurBackend.Controllers {
         [HttpPut]                                        // Modificar usuario
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<int>> Update(Usuario user) {
-            context.Usuario.Update(user);
-            await context.SaveChangesAsync();
-            return Ok(new { message = "Usuario modificado correctamente.", statusCode = 200 });
+            var searchDni = await context.Usuario.FirstOrDefaultAsync(x => x.Dni == user.Dni && x.Uuid != user.Uuid);
+            var searchCel = await context.Usuario.FirstOrDefaultAsync(x => x.Celular == user.Celular && x.Uuid != user.Uuid);
+            if (searchDni != null)
+                return BadRequest(new { message = "Este número de DNI ya existen.", statusCode = 400 });
+            else if (searchCel != null)
+                return BadRequest(new { message = "Este número de celular ya existen.", statusCode = 400 });
+            else {
+                context.Usuario.Update(user);
+                user.Pass = BCrypt.Net.BCrypt.HashPassword(user.Pass);
+                await context.SaveChangesAsync();
+                return Ok(new { message = "Usuario modificado correctamente.", statusCode = 200, data = user });
+            }
         }
 
         [HttpDelete]                                    // Eliminar usuario

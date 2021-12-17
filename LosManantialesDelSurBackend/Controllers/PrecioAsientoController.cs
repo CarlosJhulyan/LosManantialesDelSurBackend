@@ -33,7 +33,7 @@ namespace LosManantialesDelSurBackend.Controllers {
         public async Task<ActionResult<int>> Post(PrecioAsiento precio) {
             var currentUser = getCurrentUser();
             if (currentUser.Rol != "administrador")
-                return Unauthorized(new { message = "No estas autorizado para realizar esta acción." });
+                return Unauthorized(new { message = "No estas autorizado para realizar esta acción.", statusCode = 401 });
             context.PrecioAsiento.Add(precio);
             await context.SaveChangesAsync();
             return Ok(new { message = "Precio de asiento generado correctamente.", statusCode = 201, data = precio });

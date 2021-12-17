@@ -10,7 +10,8 @@ namespace LosManantialesDelSurBackend.Models
         public Vehiculo()
         {
             Paquete = new HashSet<Paquete>();
-            Pasaje = new HashSet<Pasaje>();
+            PasajeVehiculoPasajeNavigation = new HashSet<Pasaje>();
+            PasajeVehiculoPasajeStaticNavigation = new HashSet<Pasaje>();
         }
 
         public int Id { get; set; }
@@ -25,6 +26,7 @@ namespace LosManantialesDelSurBackend.Models
         public virtual Sucursal SucursalActualNavigation { get; set; }
         public virtual Sucursal SucursalFinalNavigation { get; set; }
         public virtual ICollection<Paquete> Paquete { get; set; }
-        public virtual ICollection<Pasaje> Pasaje { get; set; }
+        public virtual ICollection<Pasaje> PasajeVehiculoPasajeNavigation { get; set; }
+        public virtual ICollection<Pasaje> PasajeVehiculoPasajeStaticNavigation { get; set; }
     }
 }

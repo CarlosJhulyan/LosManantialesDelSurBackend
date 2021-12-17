@@ -27,21 +27,44 @@ namespace LosManantialesDelSurBackend.Controllers {
             this.configuracion = config;
         }
 
-        [HttpPost()]
+        [HttpPost("signIn")]
         [AllowAnonymous]
         public async Task<ActionResult<object>> SignIn(CredencialUser user) {
             var userData = await autenticarUser(user);
             if (userData is Usuario)
-                return Ok(new { token = generarJWT((Usuario) userData), data = userData });
+                return Ok(new { token = generarJWT((Usuario) userData), data = userData, statusCode = 200 });
             return userData;
+        }
+
+        [HttpPost("signUp")]
+        [AllowAnonymous]
+        public async Task<ActionResult<object>> SignUp(Usuario user) {
+            var correo = await context.Usuario.FirstOrDefaultAsync(x => x.Correo == user.Correo);
+            var dni = await context.Usuario.FirstOrDefaultAsync(x => x.Dni == user.Dni);
+            var celular = await context.Usuario.FirstOrDefaultAsync(x => x.Celular == user.Celular);
+            if (correo != null)
+                return BadRequest(new { message = "Este correo ya esta registrado.", statusCode = 400 });
+            else if (dni != null)
+                return BadRequest(new { message = "Este número de DNI ya existe.", statusCode = 400 });
+            else if (celular != null)
+                return BadRequest(new { message = "Este número de celular ya existe.", statusCode = 400 });
+            else {
+                Guid uuid = Guid.NewGuid();
+                user.Uuid = uuid.ToString();
+                user.CreatedAt = DateTime.UtcNow;
+                user.Pass = BCrypt.Net.BCrypt.HashPassword(user.Pass);
+                context.Usuario.Add(user);
+                await context.SaveChangesAsync();
+                return Ok(new { message = "Usuario registrado correctamente.", data = user, statusCode = 201, token = generarJWT(user) });
+            }
         }
 
         private async Task<object> autenticarUser(CredencialUser user) {
             var response = await context.Usuario.FirstOrDefaultAsync(x => x.Correo == user.Correo);
             if (response == null)
-                return NotFound(new { message = "Este correo no esta registrado." });
-            else if (response.Pass != user.Password)
-                return BadRequest(new { message = "Contraseña incorrecta." });
+                return NotFound(new { message = "Este correo no esta registrado.", statusCode = 404 });
+            else if (!BCrypt.Net.BCrypt.Verify(user.Password, response.Pass))
+                return BadRequest(new { message = "Contraseña incorrecta.", StatusCode = 404 });
             else
                 return response;
         }

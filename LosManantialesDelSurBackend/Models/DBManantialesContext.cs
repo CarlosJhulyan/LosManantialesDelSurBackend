@@ -197,7 +197,7 @@ namespace LosManantialesDelSurBackend.Models
             modelBuilder.Entity<Pasaje>(entity =>
             {
                 entity.HasKey(e => e.Uuid)
-                    .HasName("PK__Pasaje__7F4279304C9197FE");
+                    .HasName("PK__Pasaje__7F42793065162021");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(60)
@@ -243,6 +243,8 @@ namespace LosManantialesDelSurBackend.Models
 
                 entity.Property(e => e.VehiculoPasaje).HasColumnName("vehiculo_pasaje");
 
+                entity.Property(e => e.VehiculoPasajeStatic).HasColumnName("vehiculo_pasaje_static");
+
                 entity.HasOne(d => d.DestinoSucursalNavigation)
                     .WithMany(p => p.PasajeDestinoSucursalNavigation)
                     .HasForeignKey(d => d.DestinoSucursal)
@@ -259,9 +261,14 @@ namespace LosManantialesDelSurBackend.Models
                     .HasConstraintName("fk_Pasajero");
 
                 entity.HasOne(d => d.VehiculoPasajeNavigation)
-                    .WithMany(p => p.Pasaje)
+                    .WithMany(p => p.PasajeVehiculoPasajeNavigation)
                     .HasForeignKey(d => d.VehiculoPasaje)
                     .HasConstraintName("fk_VehiculoPasaje");
+
+                entity.HasOne(d => d.VehiculoPasajeStaticNavigation)
+                    .WithMany(p => p.PasajeVehiculoPasajeStaticNavigation)
+                    .HasForeignKey(d => d.VehiculoPasajeStatic)
+                    .HasConstraintName("fk_VehiculoPasajeStatic");
             });
 
             modelBuilder.Entity<PrecioAsiento>(entity =>
@@ -396,7 +403,7 @@ namespace LosManantialesDelSurBackend.Models
                     .HasColumnName("nombres");
 
                 entity.Property(e => e.Pass)
-                    .HasMaxLength(15)
+                    .HasMaxLength(60)
                     .IsUnicode(false)
                     .HasColumnName("pass");
 

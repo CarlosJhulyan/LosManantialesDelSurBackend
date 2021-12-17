@@ -58,6 +58,10 @@ namespace LosManantialesDelSurBackend.Controllers {
         [HttpPut]                                               //Actualiza los datos del Vehiculo
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<int>> Update(Vehiculo vehiculo) {
+            var search = await context.Vehiculo.FirstOrDefaultAsync(x => x.Id == vehiculo.Id);
+            search.SucursalActual = vehiculo.SucursalActual;
+            search.SucursalFinal= vehiculo.SucursalFinal;
+            vehiculo = search;
             context.Vehiculo.Update(vehiculo);
             await context.SaveChangesAsync();
             return Ok(new { message = "Vehiculo actualizado correctamente", statusCode = 200 });
